@@ -1,3 +1,6 @@
+// Copyright 2018-present Ovi Chis www.ovios.org All rights reserved.
+// Use of this source code is governed by a MIT-license.
+
 package main
 
 import (
@@ -7,16 +10,6 @@ import (
     "strconv"
     "fmt"
 )
-/* Add actions:
- * create-repo +
- * delete-repo +
- * snap-create +
- * snap-delete +
- * snap-restore +
- * cluster-info 
- */
-
-// start main
 
 func main() {
     ElkUsage := `
