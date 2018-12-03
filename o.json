@@ -1,0 +1,8 @@
+
+{
+  "type": "doc",
+  "title": "indexed doc",
+  "text":  "hello new version",
+  "date":  "2018-12-01",
+  "message": "First thing, forget about your curl calls and install Kibana please ! Elasticsearch: The Definitive Guide, official book (not up to date); Elasticsearch Reference, official documentation; AwesomeElasticsearch, curated list of resources about ES; Official forum and StackOverflow for support; Official online migration tool to help upgrading the stack. Queries There are two syntaxes for the basic queries: a simple one on the left, where you can't use any option, and an extended one on the right. "
+}
