@@ -6,7 +6,7 @@ package main
 import (
     "flag"
     "os"
-    "elk3/actions"
+    "elk2/actions"
     "strconv"
     "fmt"
 )
@@ -24,7 +24,8 @@ func main() {
     ==> remove-repo - required -r <repo name>.
     ==> snap-create - required -r <repo name> -s <snap name>. Optional -i <index name>. * or multiple indexes accepted.
     ==> snap-delete - required -r <repo name> -s <snap name>
-    ==> snap-restore - requires -r <repo name> -s <snap name>`
+    ==> snap-restore - requires -r <repo name> -s <snap name>
+    ==> cluster-info - returns cluster information`
     
     hostPtr := flag.String("host", "localhost", "Elastic host or IP.")
     portPtr := flag.Int("port", 9200, "Elastic port number.")

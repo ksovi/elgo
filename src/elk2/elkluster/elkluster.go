@@ -5,32 +5,53 @@ package elkluster
 
 import (
     "context"
+    "elk2/logger"
     "gopkg.in/olivere/elastic.v6"
     "fmt"
     "os"
     "encoding/json"
 )
-    
+
+func check(e error) {
+    if e != nil {
+        logger.LogError(e)
+        panic(e)
+    }
+}
 
 func InnitiateClient(ctx context.Context, url string) *elastic.Client {
-    //fmt.Println("trying to connect to ", url)
     client, err := elastic.NewClient(elastic.SetSniff(false), elastic.SetURL(url))
-    if err != nil {
-        panic(err)
-    } else {
-        //fmt.Println("Innitiated client " , client)
-        fmt.Println("Using Elasticsearch " , url)
-    }
+    check(err)
+    fmt.Println("Using Elasticsearch URL: " , url)
     return client
 }
 
-func IndexExists(ctx context.Context, client *elastic.Client, index string) ( bool, error) {
+func ClusterInfo(ctx context.Context, client *elastic.Client)  {
+    res, err := client.ClusterHealth().Do(ctx)
+    check(err)
+    fmt.Printf(`
+    ClusterName: %s
+    Status: %s
+    Number Of Nodes: %d
+    Number Of Data Nodes: %d
+    Active Primary Shards: %d
+    Active Shards: %d
+    Relocating Shards: %d
+    Initializing Shards: %d
+    Unassigned Shards: %d
+    Delayed Unassigned Shards: %d
+    Number Of Pending Tasks: %d 
+    Number Of InFlight Fetch: %d
+    Task MaxWait Time In Queue In Millis: %d
+    Active Shards Percent As Number: %.1f
+    `, res.ClusterName, res.Status, res.NumberOfNodes, res.NumberOfDataNodes, res.ActivePrimaryShards, res.ActiveShards, res.RelocatingShards, res.InitializingShards, res.UnassignedShards, res.DelayedUnassignedShards, res.NumberOfPendingTasks, res.NumberOfInFlightFetch, res.TaskMaxWaitTimeInQueueInMillis, res.ActiveShardsPercentAsNumber)
+    fmt.Printf("\n")
+}
+
+func IndexExists(ctx context.Context, client *elastic.Client, index string) bool {
     exists, err := client.IndexExists(index).Do(ctx)
-    if err != nil {
-        fmt.Println(err)
-        return exists, err
-    }
-    return exists, err
+    check(err)
+    return exists
 }
 
 func CreateIndex(ctx context.Context, client *elastic.Client, index string, indexbody string) ( bool, error) {
@@ -40,14 +61,13 @@ func CreateIndex(ctx context.Context, client *elastic.Client, index string, inde
         os.Exit(1)
     }
     createIndex, err := client.CreateIndex(index).BodyJson(indexbody).Do(ctx)
-    if err != nil {
-        fmt.Println(err)
-    }
+    check(err)
 	return createIndex.Acknowledged, err
 }
 
 func ListIndexes(ctx context.Context, client *elastic.Client) ([]string, error) {
     indexes, err := client.IndexNames()
+    check(err)
     return indexes, err
 }
 
@@ -58,17 +78,13 @@ func RemoveIndex(ctx context.Context, client *elastic.Client, index string) ( bo
         os.Exit(1)
     }
     deleteIndex, err := client.DeleteIndex(index).Do(ctx)
-     if err != nil {
-        fmt.Println(err)
-    }
+    check(err)
     return deleteIndex.Acknowledged, err
 }
 
 func IndexDoc(ctx context.Context, client *elastic.Client, index string, doctype string, indexbody string) (*elastic.IndexResponse, error) {
     put, err := client.Index().Index(index).Type(doctype).BodyJson(indexbody).Do(ctx)
-    if err != nil {
-        panic(err)
-    }
+    check(err)
     return put, err
 }
 
@@ -86,15 +102,18 @@ func CreateRepo(ctx context.Context, client *elastic.Client, reponame string, re
     BodyString(repoBody)
     
     if serr := service.Validate(); serr != nil {
+        logger.LogError(serr)
 		fmt.Println(serr)
 	}
     
     src, berr := service.Do(ctx)
 	if berr != nil {
+        logger.LogError(berr)
 		fmt.Println(berr)
 	}
 	_, jerr := json.Marshal(src)
 	if jerr != nil {
+        logger.LogInfo(fmt.Sprintf(`Marshaling to JSON failed: %v`, jerr))
 		fmt.Printf("Marshaling to JSON failed: %v\n", jerr)
 	}
     return src.Acknowledged
@@ -102,9 +121,7 @@ func CreateRepo(ctx context.Context, client *elastic.Client, reponame string, re
 
 func RemoveRepo(ctx context.Context, client *elastic.Client, reponame string) bool {
     res, err := client.SnapshotDeleteRepository(reponame).Do(ctx)
-    if err != nil {
-        panic(err)
-    }
+    check(err)
     return res.Acknowledged
 }
 
@@ -117,17 +134,13 @@ func SnapCreate(ctx context.Context, client *elastic.Client, reponame string, sn
         "wait_for_completion": "true"
     }`, snapindex)
     res , err := client.SnapshotCreate(reponame, snapname).BodyString(snapbody).Do(ctx)
-    if err != nil {
-        panic(err)
-    }
+    check(err)
     return res.Accepted
 }
 
 func SnapDelete(ctx context.Context, client *elastic.Client, reponame string, snapname string) bool {
     res, err := client.SnapshotDelete(reponame, snapname).Do(ctx)
-    if err != nil {
-        panic(err)
-    }
+    check(err)
     return res.Acknowledged
 }
 
@@ -139,8 +152,6 @@ func SnapRestore(ctx context.Context, client *elastic.Client, reponame string, s
         "include_global_state": "false"
     }`, snapindex)
     res, err := client.SnapshotRestore(reponame, snapname).BodyString(snapbody).Do(ctx)
-    if err != nil {
-        panic(err)
-    }
+    check(err)
     return res.Accepted
 }

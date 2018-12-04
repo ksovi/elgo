@@ -1,0 +1,20 @@
+2018/12/02 19:02:21 Successfully restored snapshot snap1 from repository repo2
+2018/12/02 19:09:50 Successfully restored snapshot snap1 from repository repo2
+2018/12/02 20:06:00 <nil>
+2018/12/02 20:08:53 Successfully created repo: repo0 of type: fs at location: repo0
+2018/12/02 20:09:36 Successfully created snap snap0 in repo repo0.
+2018/12/02 20:13:10 Successfully restored snapshot snap0 from repository repo0
+2018/12/02 20:15:17 Indexed document with ID: ACGicWcBDIoRzwqNPeQN to index: ovi, type: _doc
+2018/12/02 20:16:40 Successfully restored snapshot snap0 from repository repo0
+2018/12/02 20:16:57 Successfully removed snapshot snap0 from repository repo0
+2018/12/02 20:17:42 Indexed document with ID: iyGkcWcBDIoRzwqNdeTh to index: ovi2, type: log
+2018/12/02 20:19:33 Indexed document with ID: -iGmcWcBDIoRzwqNJOSq to index: ovi, type: _doc
+2018/12/02 20:20:36 Successfully created snap snap0 in repo repo0.
+2018/12/02 20:21:29 Successfully created repo: repo0 of type: fs at location: repo
+2018/12/02 20:21:37 Successfully created snap snap0 in repo repo0.
+2018/12/02 20:24:05 Successfully restored snapshot snap0 from repository repo0
+2018/12/02 20:24:22 Successfully restored snapshot snap0 from repository repo0
+2018/12/03 18:10:24 open jkdfhjk: no such file or directory
+2018/12/03 18:10:45 Successfully created index oviindex2
+2018/12/03 18:13:08 Successfully removed index oviindex2
+2018/12/03 19:03:32 health check timeout: Head http://localhost:56: dial tcp [::1]:56: connect: connection refused: no Elasticsearch node available

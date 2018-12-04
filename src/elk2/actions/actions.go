@@ -5,8 +5,8 @@ package actions
 
 import (
     "fmt"
-    "elk3/elkluster"
-    "elk3/logger"
+    "elk2/elkluster"
+    "elk2/logger"
     "context"
     "os"
     "io/ioutil"
@@ -74,8 +74,7 @@ func PassAction(action, url, input_file, indexname,actiontype, reponame, repoloc
                 fmt.Println("An indexname is required for index-exists. [-i <indexname>]")
                 os.Exit(1)
             }
-            exists, err := elkluster.IndexExists(ctx, client, indexname)
-            check(err)
+            exists := elkluster.IndexExists(ctx, client, indexname)
             if exists {
                 fmt.Printf("==> Index %s exists.\n", indexname)
             } else {
@@ -174,6 +173,8 @@ func PassAction(action, url, input_file, indexname,actiontype, reponame, repoloc
                 fmt.Printf("Successfully restored snapshot %s from repository %s.\n", snapname, reponame)
                 logger.LogInfo(fmt.Sprintf(`Successfully restored snapshot %s from repository %s`, snapname, reponame))
             }
+        case "cluster-info":
+            elkluster.ClusterInfo(ctx, client)
         default:
             fmt.Printf("Action %s is not valid. \n" , action)
             fmt.Println(ElkUsage)
