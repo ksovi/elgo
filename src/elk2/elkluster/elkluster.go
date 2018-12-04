@@ -44,7 +44,11 @@ func ClusterInfo(ctx context.Context, client *elastic.Client)  {
     Number Of InFlight Fetch: %d
     Task MaxWait Time In Queue In Millis: %d
     Active Shards Percent As Number: %.1f
-    `, res.ClusterName, res.Status, res.NumberOfNodes, res.NumberOfDataNodes, res.ActivePrimaryShards, res.ActiveShards, res.RelocatingShards, res.InitializingShards, res.UnassignedShards, res.DelayedUnassignedShards, res.NumberOfPendingTasks, res.NumberOfInFlightFetch, res.TaskMaxWaitTimeInQueueInMillis, res.ActiveShardsPercentAsNumber)
+    `, res.ClusterName, res.Status, res.NumberOfNodes, res.NumberOfDataNodes, 
+    res.ActivePrimaryShards, res.ActiveShards, res.RelocatingShards, 
+    res.InitializingShards, res.UnassignedShards, res.DelayedUnassignedShards, 
+    res.NumberOfPendingTasks, res.NumberOfInFlightFetch, res.TaskMaxWaitTimeInQueueInMillis, 
+    res.ActiveShardsPercentAsNumber)
     fmt.Printf("\n")
 }
 
@@ -82,13 +86,15 @@ func RemoveIndex(ctx context.Context, client *elastic.Client, index string) ( bo
     return deleteIndex.Acknowledged, err
 }
 
-func IndexDoc(ctx context.Context, client *elastic.Client, index string, doctype string, indexbody string) (*elastic.IndexResponse, error) {
+func IndexDoc(ctx context.Context, client *elastic.Client, index string, 
+        doctype string, indexbody string) (*elastic.IndexResponse, error) {
     put, err := client.Index().Index(index).Type(doctype).BodyJson(indexbody).Do(ctx)
     check(err)
     return put, err
 }
 
-func CreateRepo(ctx context.Context, client *elastic.Client, reponame string, repotype string, repolocation string) bool {
+func CreateRepo(ctx context.Context, client *elastic.Client, 
+        reponame string, repotype string, repolocation string) bool {
     repoBody := fmt.Sprintf( `
     {
         "type": "%s",
@@ -125,7 +131,8 @@ func RemoveRepo(ctx context.Context, client *elastic.Client, reponame string) bo
     return res.Acknowledged
 }
 
-func SnapCreate(ctx context.Context, client *elastic.Client, reponame string, snapname string, snapindex string) *bool {
+func SnapCreate(ctx context.Context, client *elastic.Client, 
+        reponame string, snapname string, snapindex string) *bool {
     snapbody := fmt.Sprintf(`
     {
         "indices": "%s",
@@ -138,13 +145,15 @@ func SnapCreate(ctx context.Context, client *elastic.Client, reponame string, sn
     return res.Accepted
 }
 
-func SnapDelete(ctx context.Context, client *elastic.Client, reponame string, snapname string) bool {
+func SnapDelete(ctx context.Context, client *elastic.Client, 
+        reponame string, snapname string) bool {
     res, err := client.SnapshotDelete(reponame, snapname).Do(ctx)
     check(err)
     return res.Acknowledged
 }
 
-func SnapRestore(ctx context.Context, client *elastic.Client, reponame string, snapname string, snapindex string) bool {
+func SnapRestore(ctx context.Context, client *elastic.Client, 
+        reponame string, snapname string, snapindex string) bool {
     snapbody := fmt.Sprintf(`
     {
         "indices": "%s",
