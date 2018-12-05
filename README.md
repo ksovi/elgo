@@ -22,7 +22,9 @@ index settings at creation, or mappings etc.<br/>
 
 Creating a repository requirs a name, a type and location. location can be a directory or directory tree <br/>
 that will be created inside ```path.repo``` as specified in ```elasticsearch.yml```.
-```$ ./elgo -action create-repo -r repo1 -type fs -l tmp/repo1
+
+```
+$ ./elgo -action create-repo -r repo1 -type fs -l tmp/repo1
 ```
 In this example we create a repository of type fs called repo1 in tmp/repo1. <br/>
 If the path.repo path is /var/backups, the full directory for this repository will be /var/backups/tmp/repo1/<br/>
