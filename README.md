@@ -14,11 +14,11 @@ The following example indexes the doc defined in o.json o index "ovi" with type 
 
 
 ```$ ./elgo -action index-doc -i ovindex -type doc -f o.json```
-Bulk request has been added and an example input file can be found here (b.json). Notice the ticks " ` " at the beginning and " ` " end 
+Bulk request has been added and an example input file can be found here (b.json). Notice the single quotes ' at the beginning and ' end 
 of 
 the 
 file. <br/> All bulk request must be provided including index, type and ID. <br/>
-All bulk requests must be provided in a json file, inside `` just like the example file b.json.<br/>
+All bulk requests must be provided in a json file, inside ticks or single quotes, just like the example file b.json.<br/>
 
 ```
 $./elgo.go -action bulk-request -f b.json 
