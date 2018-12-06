@@ -21,7 +21,7 @@ file. <br/> All bulk request must be provided including index, type and ID. <br/
 All bulk requests must be provided in a json file, inside ticks or single quotes, just like the example file b.json.<br/>
 
 ```
-$./elgo.go -action bulk-request -f b.json 
+$./elgo -action bulk-request -f b.json 
 Using Elasticsearch URL:  http://localhost:9200
 Created documents:  4
 Indexed documents:  6
@@ -72,6 +72,7 @@ $ ./elgo
     ==> snap-delete - required -r <repo name> -s <snap name>
     ==> snap-restore - requires -r <repo name> -s <snap name>
     ==> cluster-info - returns cluster information
-
+    ==> bulk-request - create/index/delete or update using the bulk interface. -f <json file> required containing the bulk request to 
+be sent to elasticsearch.
 ```
 
