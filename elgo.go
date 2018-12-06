@@ -25,7 +25,8 @@ func main() {
     ==> snap-create - required -r <repo name> -s <snap name>. Optional -i <index name>. * or multiple indexes accepted.
     ==> snap-delete - required -r <repo name> -s <snap name>
     ==> snap-restore - requires -r <repo name> -s <snap name>
-    ==> cluster-info - returns cluster information`
+    ==> cluster-info - returns cluster information
+    ==> bulk-request - create/index/delete or update using the bulk interface. -f <json file> required containing the bulk request to be sent to elasticsearch.`
     
     hostPtr := flag.String("host", "localhost", "Elastic host or IP.")
     portPtr := flag.Int("port", 9200, "Elastic port number.")

@@ -164,3 +164,24 @@ func SnapRestore(ctx context.Context, client *elastic.Client,
     check(err)
     return res.Accepted
 }
+
+func BulkAction(ctx context.Context, client *elastic.Client, bulkbody string) {
+    elgoReq := elastic.NewBulkIndexRequest().Doc(bulkbody).Index("*").Type("*")
+    bulkRequest := client.Bulk()
+    bulkRequest = bulkRequest.Add(elgoReq)
+    bulkResponse, err := bulkRequest.Do(ctx)
+    check(err)
+    
+    created := bulkResponse.Created()
+    deleted := bulkResponse.Deleted()
+    indexed := bulkResponse.Indexed()
+    updated := bulkResponse.Updated()
+    logger.LogInfo(fmt.Sprintf("Created documents: %d", len(created)))
+    logger.LogInfo(fmt.Sprintf("Indexed documents: %d", len(indexed)))
+    logger.LogInfo(fmt.Sprintf("Updated documents: %d", len(updated)))
+    logger.LogInfo(fmt.Sprintf("Deleted documents: %d", len(deleted)))
+    fmt.Println("Created documents: ", len(created))
+    fmt.Println("Indexed documents: ", len(indexed)) 
+    fmt.Println("Updated documents: ", len(updated))
+    fmt.Println("Deleted documents: ", len(deleted))
+}

@@ -14,6 +14,19 @@ The following example indexes the doc defined in o.json o index "ovi" with type 
 
 
 ```$ ./elgo -action index-doc -i ovindex -type doc -f o.json```
+Bulk request has been added and an example input file can be found here (b.json). Notice the ticks ` at the beginning and ` end of the 
+file. <br/> All bulk request must be provided includign index, type and ID. <br/>
+All bulk requests must be provided in a json file, inside `` just like the example file b.json.<br/>
+
+```
+$./elgo.go -action bulk-request -f b.json 
+Using Elasticsearch URL:  http://localhost:9200
+Created documents:  4
+Indexed documents:  6
+Updated documents:  2
+Deleted documents:  2
+
+```
 
 elgo writes a logfile called elgo.out in the current working directory. <br/>
 

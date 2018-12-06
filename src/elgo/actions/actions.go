@@ -175,6 +175,19 @@ func PassAction(action, url, input_file, indexname,actiontype, reponame, repoloc
             }
         case "cluster-info":
             elkluster.ClusterInfo(ctx, client)
+        case "bulk-request":
+            bulkbody := ""
+            if input_file == "" {
+                fmt.Println("An input file is required for index-doc. [-f <path to file>]")
+                os.Exit(1)
+            } else {
+                data, err := ioutil.ReadFile(input_file)
+                check(err)
+                bulkbody = string(data)
+            }
+          //  fmt.Println(bulkbody)
+            
+            elkluster.BulkAction(ctx, client, bulkbody)
         default:
             fmt.Printf("Action %s is not valid. \n" , action)
             fmt.Println(ElkUsage)
