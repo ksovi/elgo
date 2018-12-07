@@ -166,22 +166,71 @@ func SnapRestore(ctx context.Context, client *elastic.Client,
 }
 
 func BulkAction(ctx context.Context, client *elastic.Client, bulkbody string) {
-    elgoReq := elastic.NewBulkIndexRequest().Doc(bulkbody).Index("*").Type("*")
+    elgoReq := elastic.NewBulkIndexRequest().Doc(bulkbody).Index("_").Type("_")
     bulkRequest := client.Bulk()
     bulkRequest = bulkRequest.Add(elgoReq)
     bulkResponse, err := bulkRequest.Do(ctx)
     check(err)
     
-    created := bulkResponse.Created()
-    deleted := bulkResponse.Deleted()
-    indexed := bulkResponse.Indexed()
-    updated := bulkResponse.Updated()
+    cr := bulkResponse.Created()
+    de := bulkResponse.Deleted()
+    ix := bulkResponse.Indexed()
+    up := bulkResponse.Updated() 
+    
+    logger.LogInfo(fmt.Sprintf(`Total number of documents created: %d`, len(cr)))
+    logger.LogInfo(fmt.Sprintf(`Total number of documents indexed: %d`, len(ix)))
+    logger.LogInfo(fmt.Sprintf(`Total number of documents updated: %d`, len(up)))
+    logger.LogInfo(fmt.Sprintf(`Total number of documents deleted: %d`, len(de)))
+    
+    if len(cr) > 0 {
+        for i, _ := range cr {
+            prstring := fmt.Sprintf(`Created document ID: %s Index: %s Type: %s Version: %d Elasticsearch response: %d Error: %v ` , cr[i].Id, cr[i].Index, cr[i].Type, cr[i].Version, cr[i].Status, cr[i].Error)
+            logger.LogInfo(prstring)
+        } 
+    } else {
+        prstring := "No documents created."
+        fmt.Println(prstring)
+        logger.LogInfo(prstring)
+    }
+    if len(de) > 0 {
+        for i, _ := range de {
+            prstring := fmt.Sprintf(`Deleted document ID: %s Index: %s Type: %s Version: %d Elasticsearch response: %d Error: %v` , de[i].Id, de[i].Index, de[i].Type, de[i].Version, de[i].Status, de[i].Error)
+            logger.LogInfo(prstring)
+        } 
+    } else {
+        prstring := "No documents deleted."
+        fmt.Println(prstring)
+        logger.LogInfo(prstring)
+    }
+    if len(ix) > 0 {
+        for i, _ := range ix {
+            prstring := fmt.Sprintf(`Indexed document ID: %s Index: %s Type: %s Version: %d Elasticsearch response: %d Error: %v` , ix[i].Id, ix[i].Index, ix[i].Type, ix[i].Version, ix[i].Status, ix[i].Error)
+            logger.LogInfo(prstring)
+        } 
+    } else {
+        prstring := "No documents indexed."
+        fmt.Println(prstring)
+        logger.LogInfo(prstring)
+    }
+    if len(up) > 0 {
+        for i, _ := range up {
+            prstring := fmt.Sprintf(`Updated document ID: %s Index: %s Type: %s Version: %d Elasticsearch response: %d Error: %v` , up[i].Id, up[i].Index, up[i].Type, up[i].Version, up[i].Status, up[i].Error)
+            logger.LogInfo(prstring)
+        } 
+    } else {
+        prstring := "No documents updated."
+        fmt.Println(prstring)
+        logger.LogInfo(prstring)
+    }
+    /*
     logger.LogInfo(fmt.Sprintf("Created documents: %d", len(created)))
     logger.LogInfo(fmt.Sprintf("Indexed documents: %d", len(indexed)))
     logger.LogInfo(fmt.Sprintf("Updated documents: %d", len(updated)))
     logger.LogInfo(fmt.Sprintf("Deleted documents: %d", len(deleted)))
-    fmt.Println("Created documents: ", len(created))
-    fmt.Println("Indexed documents: ", len(indexed)) 
-    fmt.Println("Updated documents: ", len(updated))
-    fmt.Println("Deleted documents: ", len(deleted))
+    */
+        
+    fmt.Println("Created documents: ", len(cr))
+    fmt.Println("Indexed documents: ", len(ix)) 
+    fmt.Println("Updated documents: ", len(up))
+    fmt.Println("Deleted documents: ", len(de))
 }
