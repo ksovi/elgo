@@ -26,7 +26,8 @@ func main() {
     ==> snap-delete - required -r <repo name> -s <snap name>
     ==> snap-restore - requires -r <repo name> -s <snap name>
     ==> cluster-info - returns cluster information
-    ==> bulk-request - create/index/delete or update using the bulk interface. -f <json file> required containing the bulk request to be sent to elasticsearch.`
+    ==> bulk-request - create/index/delete or update using the bulk interface. -f <json file> required containing the bulk request to be sent to elasticsearch.
+    ==> search - searches through indexed documents for a specific field, like Id, Type, etc. in one or more or all indexes.`
     
     hostPtr := flag.String("host", "localhost", "Elastic host or IP.")
     portPtr := flag.Int("port", 9200, "Elastic port number.")
@@ -37,6 +38,9 @@ func main() {
     repoLocPtr := flag.String("l", "", "Repo location.")
     snapNamePtr := flag.String("s", "", "Snap name.")
     typePtr := flag.String("type", "", "Doc type for indexing")
+    maxReturnPtr := flag.Int("mr", 10, "Search max number of returns.")
+    sfieldPtr := flag.String("sf", "", "Search field.")
+    svaluePtr := flag.String("sv", "", "Search value.")
     
     flag.Parse()
     
@@ -54,8 +58,11 @@ func main() {
     reponame := *repoNamePtr
     repolocation := *repoLocPtr
     snapname := *snapNamePtr
+    maxreturns := *maxReturnPtr
+    sfield := *sfieldPtr
+    svalue := *svaluePtr
     p := strconv.Itoa(port)
     url := "http://"+host+":"+p
-    
-    actions.PassAction(action, url, input_file, indexname,actiontype, reponame, repolocation, snapname, ElkUsage)
+   
+    actions.PassAction(action, url, input_file, indexname, actiontype, reponame, repolocation, snapname, sfield, svalue,  ElkUsage, maxreturns)
 }

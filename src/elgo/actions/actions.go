@@ -18,7 +18,11 @@ import (
  * snap-create +
  * snap-delete +
  * snap-restore +
- * cluster-info 
+ * cluster-info +
+ * bulk-request +
+ * search +
+ * list-snapshots/repository
+ * nodes information/data information
  */
 
 
@@ -29,7 +33,7 @@ func check(e error) {
     }
 }
 
-func PassAction(action, url, input_file, indexname,actiontype, reponame, repolocation, snapname, ElkUsage string) {
+func PassAction(action, url, input_file, indexname, actiontype, reponame, repolocation, snapname, sfield, svalue, ElkUsage string, maxreturns int) {
     ctx := context.Background()
     client := elkluster.InnitiateClient(ctx, url)    
     switch action {
@@ -178,19 +182,26 @@ func PassAction(action, url, input_file, indexname,actiontype, reponame, repoloc
         case "bulk-request":
             bulkbody := ""
             if input_file == "" {
-                fmt.Println("An input file is required for index-doc. [-f <path to file>]")
+                fmt.Println("An input file is required for bulk-request. [-f <path to file>]")
                 os.Exit(1)
             } else {
                 data, err := ioutil.ReadFile(input_file)
                 check(err)
                 bulkbody = string(data)
-            }
-          //  fmt.Println(bulkbody)
-            
+            }            
             elkluster.BulkAction(ctx, client, bulkbody)
+        case "search":
+            if sfield == "" {
+                fmt.Println("Search field (-sf) and search value (-sv) are required for action search")
+                os.Exit(1)
+            }
+            if svalue == "" {
+                fmt.Println("Search field (-sf) and search value (-sv) are required for action search")
+                os.Exit(1)
+            }
+            elkluster.ElgoSearch(ctx, client, indexname, sfield, svalue, maxreturns)
         default:
             fmt.Printf("Action %s is not valid. \n" , action)
             fmt.Println(ElkUsage)
     }
 }
-

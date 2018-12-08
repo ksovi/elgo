@@ -222,15 +222,31 @@ func BulkAction(ctx context.Context, client *elastic.Client, bulkbody string) {
         fmt.Println(prstring)
         logger.LogInfo(prstring)
     }
-    /*
-    logger.LogInfo(fmt.Sprintf("Created documents: %d", len(created)))
-    logger.LogInfo(fmt.Sprintf("Indexed documents: %d", len(indexed)))
-    logger.LogInfo(fmt.Sprintf("Updated documents: %d", len(updated)))
-    logger.LogInfo(fmt.Sprintf("Deleted documents: %d", len(deleted)))
-    */
-        
+    
     fmt.Println("Created documents: ", len(cr))
     fmt.Println("Indexed documents: ", len(ix)) 
     fmt.Println("Updated documents: ", len(up))
     fmt.Println("Deleted documents: ", len(de))
+}
+
+func ElgoSearch(ctx context.Context, client *elastic.Client, indexname, sfield, svalue string, maxreturns int) {
+    termQuery := elastic.NewTermQuery(sfield, svalue)
+    logger.LogInfo(fmt.Sprintf("Running search on index: %s , search field: %s, search value: %s", indexname, sfield, svalue))     
+    SR, err := client.Search().Index(indexname).Query(termQuery).From(0).Size(maxreturns).Pretty(true).Do(ctx)
+    check(err)
+    fmt.Printf("Search took %d milliseconds.\n", SR.TookInMillis)
+    logger.LogInfo(fmt.Sprintf("Search took %d milliseconds.", SR.TookInMillis))
+    fmt.Printf("Found %d results. \n", SR.Hits.TotalHits)
+    logger.LogInfo(fmt.Sprintf("Found %d results.", SR.Hits.TotalHits))
+    
+    for _, v := range SR.Hits.Hits {
+        fmt.Println("Document ID: ", v.Id)
+        fmt.Println("Document Type: ", v.Type)
+        items := make(map[string]interface{})
+        err := json.Unmarshal(*v.Source, &items)
+        check(err)
+        for m , item := range items {
+            fmt.Println(m, ": ", item)
+        }
+    }
 }
