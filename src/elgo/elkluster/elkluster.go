@@ -240,6 +240,7 @@ func ElgoSearch(ctx context.Context, client *elastic.Client, indexname, sfield, 
     logger.LogInfo(fmt.Sprintf("Found %d results.", SR.Hits.TotalHits))
     
     for _, v := range SR.Hits.Hits {
+        fmt.Println("---------------------------")
         fmt.Println("Document ID: ", v.Id)
         fmt.Println("Document Type: ", v.Type)
         items := make(map[string]interface{})

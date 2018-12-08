@@ -64,5 +64,6 @@ func main() {
     p := strconv.Itoa(port)
     url := "http://"+host+":"+p
    
-    actions.PassAction(action, url, input_file, indexname, actiontype, reponame, repolocation, snapname, sfield, svalue,  ElkUsage, maxreturns)
+    actions.PassAction(action, url, input_file, indexname, actiontype, 
+                       reponame, repolocation, snapname, sfield, svalue,  ElkUsage, maxreturns)
 }
