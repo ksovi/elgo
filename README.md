@@ -5,7 +5,8 @@ Specify -host WITHOUT "http://".<br/>
 <br/>
 So far elgo supports index actions like create, remove, list, exists, <br/>
 repository actions like create and remove, snapshot actions like create, <br/>
-delete and restore, and cluster health information.
+delete and restore, bulk indexing, searching and cluster health information.<br/>
+[SEE THE WIKI PAGE FOR DETAILS](https://github.com/ksovi/elgo/wiki)<br/>
 
 elgo also can index documents to indexes, using the index-doc action. <br/>
 The document and metadata must be provided as a json file. this repository contains an example file <br/>
