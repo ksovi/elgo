@@ -7,7 +7,7 @@ import (
     "flag"
     "os"
     "elgo/actions"
-    "strconv"
+    ///"strconv"
     "fmt"
 )
 
@@ -29,8 +29,7 @@ func main() {
     ==> bulk-request - create/index/delete or update using the bulk interface. -f <json file> required containing the bulk request to be sent to elasticsearch.
     ==> search - searches through indexed documents for a specific field, like Id, Type, etc. in one or more or all indexes.`
     
-    hostPtr := flag.String("host", "localhost", "Elastic host or IP.")
-    portPtr := flag.Int("port", 9200, "Elastic port number.")
+    urlPtr := flag.String("url", "http://localhost:9200", "Elastic host or IP and port.")
     actionPtr := flag.String("action", "", "Action to execute")
     indexPtr := flag.String("i", "", "Index name")
     inputfilePtr := flag.String("f", "", "Input json file.")
@@ -50,8 +49,7 @@ func main() {
     }
     
     action := *actionPtr
-    host := *hostPtr
-    port := *portPtr
+    url := *urlPtr
     input_file := *inputfilePtr
     indexname := *indexPtr
     actiontype := *typePtr
@@ -61,8 +59,7 @@ func main() {
     maxreturns := *maxReturnPtr
     sfield := *sfieldPtr
     svalue := *svaluePtr
-    p := strconv.Itoa(port)
-    url := "http://"+host+":"+p
+    
    
     actions.PassAction(action, url, input_file, indexname, actiontype, 
                        reponame, repolocation, snapname, sfield, svalue,  ElkUsage, maxreturns)
