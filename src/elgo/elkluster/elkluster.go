@@ -10,6 +10,8 @@ import (
     "fmt"
     "os"
     "encoding/json"
+    "net/http"
+    "crypto/tls"
 )
 
 func check(e error) {
@@ -20,7 +22,30 @@ func check(e error) {
 }
 
 func InnitiateClient(ctx context.Context, url string) *elastic.Client {
-    client, err := elastic.NewClient(elastic.SetSniff(false), elastic.SetURL(url))
+    /*
+    here we create an http client that supports https auth
+    This way we can pass the url argument like this:
+    # elgo -url https://user:passwd@elasticsearch.node:9200 
+    */
+    transport := &http.Transport{
+        TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+    }
+
+    httpClient:= &http.Client{
+            Transport: transport,
+    }
+	
+    /*
+    the client auth username and passwd can also be hardcoded here:
+    
+    client, err := elastic.NewClient(elastic.SetHttpClient(httpClient), elastic.SetSniff(false), 
+        elastic.SetBasicAuth("user", "password"), elastic.SetURL(url))
+    check(err)
+    fmt.Println("Using Elasticsearch URL: " , url)
+    return client
+    */
+    
+    client, err := elastic.NewClient(elastic.SetHttpClient(httpClient), elastic.SetSniff(false), elastic.SetURL(url))
     check(err)
     fmt.Println("Using Elasticsearch URL: " , url)
     return client
